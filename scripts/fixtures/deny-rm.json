@@ -1,0 +1,1 @@
+{ "timestamp": 1704614600000, "cwd": ".", "toolName": "bash", "toolArgs": "{\"command\":\"rm -rf docs/plans\",\"description\":\"Clean up old plans\"}" }

@@ -1,0 +1,7 @@
+# Default owner for everything
+*                @OWNER
+
+# Compliance-sensitive code and agent configuration
+/src/policy.js   @OWNER
+/.github/        @OWNER
+/config/         @OWNER

@@ -1,0 +1,1 @@
+{ "timestamp": 1704614600000, "cwd": ".", "toolName": "edit", "toolArgs": "{\"path\":\".github/workflows/ci.yml\",\"old_str\":\"node-version: 24\",\"new_str\":\"node-version: 22\"}" }

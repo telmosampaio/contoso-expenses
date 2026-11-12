@@ -1,0 +1,46 @@
+name: Agent evaluation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Find the plan named in the PR description
+        id: plan
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          plan=$(printf '%s\n' "$PR_BODY" | sed -n 's/^[[:space:]]*Plan:[[:space:]]*`\{0,1\}\([^`[:space:]]*\).*/\1/p' | head -n 1)
+          echo "path=${plan}" >> "$GITHUB_OUTPUT"
+      - name: Run the evaluation scorecard
+        env:
+          PLAN: ${{ steps.plan.outputs.path }}
+          BASE: origin/${{ github.base_ref || 'main' }}
+        run: |
+          args=(--base "$BASE")
+          if [ -n "$PLAN" ] && [ -f "$PLAN" ]; then args+=(--plan "$PLAN"); fi
+          node scripts/eval-agent.js "${args[@]}"
+      - name: Upload the scorecard as a workflow artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: agent-eval-${{ github.run_id }}
+          path: eval/results/
+          retention-days: 30

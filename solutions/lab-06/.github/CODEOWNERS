@@ -1,0 +1,11 @@
+# No default owner: docs and tests need a normal review, not a code-owner review (velocity tuning, Lab 6).
+
+# Compliance-sensitive code
+/src/policy.js            @OWNER
+
+# Agent configuration, guardrails and automation (agents must not change these alone)
+/.github/                 @OWNER
+/config/                  @OWNER
+
+# Plan approvals are a human decision
+/docs/plans/              @OWNER

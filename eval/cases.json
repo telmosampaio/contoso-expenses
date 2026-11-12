@@ -1,0 +1,8 @@
+[
+  { "id": "GC-1", "amount": 0.01, "expectedRoute": "auto", "requirement": "FR-3" },
+  { "id": "GC-2", "amount": 99.99, "expectedRoute": "auto", "requirement": "FR-3" },
+  { "id": "GC-3", "amount": 100.00, "expectedRoute": "auto", "requirement": "FR-3 (inclusive)" },
+  { "id": "GC-4", "amount": 100.01, "expectedRoute": "manager", "requirement": "FR-4" },
+  { "id": "GC-5", "amount": 1000.00, "expectedRoute": "manager", "requirement": "FR-4 (inclusive)" },
+  { "id": "GC-6", "amount": 1000.01, "expectedRoute": "finance", "requirement": "FR-5" }
+]

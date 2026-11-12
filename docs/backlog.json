@@ -1,0 +1,50 @@
+[
+  {
+    "key": "FEAT-1",
+    "title": "FEAT-1: Require a receipt for expenses over $75.00",
+    "labels": ["feature", "lab-1"],
+    "body": "## Request\nFinance needs proof of purchase for larger expenses.\n\n## Contract (do not change names or messages)\n- `POST /expenses` with `amount` greater than 75.00 must include `receiptId` (non-empty string).\n- Missing or empty `receiptId` returns `400` with error text exactly `receiptId is required for expenses over 75.00`.\n- An amount of exactly 75.00 does not need a receipt.\n- When present, `receiptId` is stored on the expense record.\n\n## Agent task card\nSee docs/templates/agent-task.md. Fill it in during Lab 1."
+  },
+  {
+    "key": "FEAT-2",
+    "title": "FEAT-2: Meals over the $60.00 per-diem need a justification",
+    "labels": ["feature", "lab-2"],
+    "body": "## Request\nMeal expenses above the per-diem must be explained.\n\n## Contract\n- When `category` is `meals` and `amount` is greater than 60.00, `justification` is required: a string of at least 10 characters after trimming.\n- Otherwise return `400` with error text exactly `justification is required for meals over 60.00`.\n- Other categories are not affected. Exactly 60.00 needs no justification.\n- When present, `justification` is stored on the expense record.\n- This rule is independent of FEAT-1 (a $80 meal needs both a receipt and a justification)."
+  },
+  {
+    "key": "FEAT-3",
+    "title": "FEAT-3: Export expenses as CSV",
+    "labels": ["feature", "lab-3"],
+    "body": "## Request\nFinance wants a spreadsheet-friendly export.\n\n## Contract\n- `GET /expenses.csv` returns `200` with `content-type: text/csv; charset=utf-8`.\n- First line is exactly `id,employee,date,category,amount,status,route`.\n- One line per expense in creation order; `amount` always has 2 decimals (e.g. `42.50`).\n- Values that contain a comma, double quote or newline are quoted per RFC 4180 (double quotes doubled).\n- Lines end with `\\n`. An empty store returns only the header line.\n\nPR description must include `Plan: docs/plans/FEAT-3-csv-export.md`."
+  },
+  {
+    "key": "FEAT-4",
+    "title": "FEAT-4: Audit trail for approval decisions",
+    "labels": ["feature", "lab-4"],
+    "body": "## Request\nCompliance needs a record of every routing decision.\n\n## Contract\n- New module `src/audit.js` exporting `createAuditLog()` with `record(entry)` and `list()`.\n- Every successful `POST /expenses` records `{ expenseId, route, decidedBy: \"policy-engine\", at }` where `at` is an ISO timestamp.\n- `GET /audit` returns `200` with the entries as a JSON array, newest first.\n- Audit entries are append-only: there is no update or delete API."
+  },
+  {
+    "key": "FEAT-5",
+    "title": "FEAT-5: Filter expenses by category",
+    "labels": ["feature", "lab-4"],
+    "body": "## Contract\n- `GET /expenses?category=<name>` returns only expenses in that category.\n- An unknown category returns `400` with error text exactly `unknown category: <name>`.\n- Without the parameter the behavior is unchanged."
+  },
+  {
+    "key": "FEAT-6",
+    "title": "FEAT-6: Paginate the expense list",
+    "labels": ["feature", "lab-4"],
+    "body": "## Contract\n- `GET /expenses?limit=<n>&offset=<n>` returns a slice of the list (still a JSON array).\n- Defaults: `limit=50`, `offset=0`. `limit` is capped at 100.\n- Non-integer or negative values return `400` with error text exactly `limit and offset must be non-negative integers`.\n- The response header `x-total-count` carries the total number of matching expenses."
+  },
+  {
+    "key": "BUG-7",
+    "title": "BUG-7: $100.00 expenses are routed to a manager instead of auto-approved",
+    "labels": ["bug", "lab-5"],
+    "body": "## Report\nAn employee submitted exactly 100.00 and it went to their manager. docs/requirements.md FR-3 says expenses **up to and including** 100.00 are auto-approved.\n\n## Expected\n- 100.00 -> `auto`; 100.01 -> `manager`; 1000.00 -> `manager`; 1000.01 -> `finance`.\n- Boundary tests added for every threshold."
+  },
+  {
+    "key": "DOCS-8",
+    "title": "DOCS-8: Document the API in README.md",
+    "labels": ["documentation", "lab-6"],
+    "body": "## Request\nAdd an `## API` section to README.md listing every route, its request body and its errors. Documentation only: no code changes."
+  }
+]

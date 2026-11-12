@@ -1,0 +1,59 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+
+# Least privilege: read-only token by default; no job needs more.
+permissions:
+  contents: read
+
+# Never run two production deployments at once; a newer run replaces an older pending one.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm test
+      - name: Package release
+        run: tar -czf release.tgz src package.json
+      - uses: actions/upload-artifact@v6
+        with:
+          name: release-${{ github.sha }}
+          path: release.tgz
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The production environment requires a human reviewer before this job starts.
+    environment:
+      name: production
+      url: https://contoso-expenses.example.com
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: release-${{ github.sha }}
+      - name: Deploy (simulated)
+        run: |
+          ls -l release.tgz
+          echo "Deployed ${GITHUB_SHA} to production (simulated) by run ${GITHUB_RUN_ID}, triggered by ${GITHUB_ACTOR}" | tee deploy-record.txt
+      - uses: actions/upload-artifact@v6
+        with:
+          name: deploy-record-${{ github.sha }}
+          path: deploy-record.txt
+          retention-days: 90

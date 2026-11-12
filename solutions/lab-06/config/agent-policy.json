@@ -1,0 +1,25 @@
+{
+  "denyCommands": [
+    "rm\\s+-rf?\\s",
+    "Remove-Item\\b.*-Recurse",
+    "git\\s+push\\b.*(--force|\\s-f\\b)",
+    "git\\s+push\\s+(origin\\s+)?main\\b",
+    "git\\s+reset\\s+--hard",
+    "(curl|wget)\\b[^|]*\\|\\s*(sh|bash)",
+    "npm\\s+publish",
+    "gh\\s+pr\\s+merge",
+    "gh\\s+repo\\s+delete"
+  ],
+  "protectedPaths": [
+    ".github/workflows/**",
+    ".github/hooks/**",
+    ".github/agents/**",
+    ".github/CODEOWNERS",
+    "config/agent-policy.json",
+    "src/policy.js"
+  ],
+  "planRequiredPaths": [
+    "src/**",
+    "test/**"
+  ]
+}

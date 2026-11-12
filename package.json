@@ -1,0 +1,16 @@
+{
+  "name": "contoso-expenses",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Contoso Expense Service: the shared use case for the GH-600 multi-agent labs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "eval": "node scripts/eval-agent.js",
+    "check-plan": "node scripts/check-plan.js"
+  }
+}

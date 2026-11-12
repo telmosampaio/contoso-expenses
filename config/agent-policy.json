@@ -1,0 +1,8 @@
+{
+  "denyCommands": [],
+  "protectedPaths": [],
+  "planRequiredPaths": [
+    "src/**",
+    "test/**"
+  ]
+}
