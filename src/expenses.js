@@ -45,6 +45,11 @@ function validateExpense(input, { today = new Date() } = {}) {
     errors.push('amount must have at most 2 decimal places');
   }
 
+  if (typeof input.amount === 'number' && Number.isFinite(input.amount) && input.amount > 75 &&
+      (typeof input.receiptId !== 'string' || input.receiptId.trim() === '')) {
+    errors.push('receiptId is required for expenses over 75.00');
+  }
+
   if (!CATEGORIES.includes(input.category)) {
     errors.push(`category must be one of: ${CATEGORIES.join(', ')}`);
   }
@@ -76,6 +81,7 @@ function normalizeExpense(input, options) {
     date: input.date,
   };
   if (input.description !== undefined) expense.description = input.description;
+  if (input.receiptId !== undefined) expense.receiptId = input.receiptId;
   return expense;
 }
 
