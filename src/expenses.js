@@ -50,6 +50,12 @@ function validateExpense(input, { today = new Date() } = {}) {
     errors.push('receiptId is required for expenses over 75.00');
   }
 
+  if (input.category === 'meals' && typeof input.amount === 'number' &&
+      Number.isFinite(input.amount) && input.amount > 60 &&
+      (typeof input.justification !== 'string' || input.justification.trim().length < 10)) {
+    errors.push('justification is required for meals over 60.00');
+  }
+
   if (!CATEGORIES.includes(input.category)) {
     errors.push(`category must be one of: ${CATEGORIES.join(', ')}`);
   }
@@ -82,6 +88,7 @@ function normalizeExpense(input, options) {
   };
   if (input.description !== undefined) expense.description = input.description;
   if (input.receiptId !== undefined) expense.receiptId = input.receiptId;
+  if (input.justification !== undefined) expense.justification = input.justification;
   return expense;
 }
 
