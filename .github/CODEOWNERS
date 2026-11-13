@@ -1,0 +1,7 @@
+# Default owner for everything
+*                @telmosampaio
+
+# Compliance-sensitive code and agent configuration
+/src/policy.js   @telmosampaio
+/.github/        @telmosampaio
+/config/         @telmosampaio
