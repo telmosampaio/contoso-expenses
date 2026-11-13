@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "github-readonly": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/readonly",
+      "headers": {
+        "X-MCP-Toolsets": "issues,pull_requests,actions"
+      }
+    }
+  }
+}
