@@ -46,6 +46,26 @@ function createApp({ store = createStore() } = {}) {
       return send(res, 200, items);
     }
 
+    if (req.method === 'GET' && path === '/expenses.csv') {
+      const escapeCsv = (value) => {
+        const text = String(value);
+        return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+      };
+      const rows = store.list().map((expense) => [
+        expense.id,
+        expense.employee,
+        expense.date,
+        expense.category,
+        expense.amount.toFixed(2),
+        expense.status,
+        expense.route,
+      ].map(escapeCsv).join(','));
+      const csv = `id,employee,date,category,amount,status,route\n${rows.length ? `${rows.join('\n')}\n` : ''}`;
+      return send(res, 200, csv, {
+        'content-type': 'text/csv; charset=utf-8',
+      });
+    }
+
     if (req.method === 'POST' && path === '/expenses') {
       let body;
       try {
